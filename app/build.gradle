@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
+    defaultConfig {
+        applicationId "br.com.thiengo.cinemalocalapp"
+        minSdkVersion 10
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    testCompile 'junit:junit:4.12'
+
+    /* PARA USAR O RECYCLERVIEW E AS VIEWS DE BAR */
+    compile 'com.android.support:design:25.0.0'
+
+    /* CARREGAR IMAGENS REMOTAS */
+    compile 'com.squareup.picasso:picasso:2.5.2'
+}
+
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'http://maven.calldorado.com/nexus/content/repositories/releases' }
+    }
+    dependencies {
+        classpath 'com.calldorado:calldorado-gradle-plugin:+'
+    }
+}
+apply plugin: 'calldorado'
+calldorado {
+    accountId = "a1-ac3673e8-00da-45d9-ba76-ffde7051ca37"
+    appId = "b0-39cc69db-b8a6-433b-bf06-2ce4415b63ec"
+}
+dependencies {
+    compile('com.calldorado:calldorado-release:3.0.+@aar') {
+        transitive = true
+    }
+}
