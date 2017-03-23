@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import br.com.thiengo.cinemalocalapp.domain.Filme;
 
 
-/**
- * Created by viniciusthiengo on 03/03/17.
- */
 
 public class Mock {
     public static Filme gerarFilme(int posicao, int qtdSalas ){

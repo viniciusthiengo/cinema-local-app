@@ -1,31 +1,24 @@
 package br.com.thiengo.cinemalocalapp;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.calldorado.Calldorado;
-import com.calldorado.CalldoradoEventsManager;
 import com.squareup.picasso.Picasso;
 
-import br.com.thiengo.cinemalocalapp.data.Mock;
+import br.com.thiengo.cinemalocalapp.data.SPFilme;
 import br.com.thiengo.cinemalocalapp.domain.Filme;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetalhesActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
+        setContentView(R.layout.activity_detalhes);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -47,6 +40,8 @@ public class DetailsActivity extends AppCompatActivity {
 
         TextView tvSinopse = (TextView) findViewById(R.id.tv_sinopse);
         tvSinopse.setText( filme.getSinopse() );
+
+        SPFilme.saveFilmeVisualizado( this, filme.getUrlImagem() );
     }
 
     @Override

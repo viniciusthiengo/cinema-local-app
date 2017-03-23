@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="br.com.thiengo.cinemalocalapp.DetailsActivity"
-    tools:showIn="@layout/activity_details">
+    tools:context="br.com.thiengo.cinemalocalapp.DetalhesActivity"
+    tools:showIn="@layout/activity_detalhes">
 
     <TextView
         android:id="@+id/tv_sinopse"

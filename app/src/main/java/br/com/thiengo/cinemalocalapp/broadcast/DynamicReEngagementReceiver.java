@@ -7,25 +7,40 @@ import android.util.Log;
 
 import com.calldorado.Calldorado;
 
-/**
- * Created by viniciusthiengo on 21/03/17.
- */
+import java.util.List;
+
+import br.com.thiengo.cinemalocalapp.data.Mock;
+import br.com.thiengo.cinemalocalapp.data.SPFilme;
+import br.com.thiengo.cinemalocalapp.domain.Filme;
+
 
 public class DynamicReEngagementReceiver extends BroadcastReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i("log", "onReceive()");
 
         if( intent.getAction().equalsIgnoreCase("com.calldorado.android.intent.DYNAMIC_RE_ENGAGEMENT_SHOWN") ){
-            String fieldName = intent.getExtras().getString("reEngagementName");
 
-            Log.i("log", "fieldName: "+fieldName);
-            Calldorado.ReEngagementField field = new Calldorado
-                .ReEngagementField(
+            List<Filme> filmes = Mock.gerarFilmes();
+            String fieldName = intent.getExtras().getString("reEngagementName");
+            String path = null;
+            String fieldLabel = null;
+
+            if( SPFilme.hasFilmeParaVisualizar( context, filmes ) ){
+                Filme filme = SPFilme.getFilmeMaisAtualNaoVisualizado( context, filmes );
+                path = "android-app://br.com.thiengo.cinemalocalapp/" + filme.getUrlImagem();
+                fieldLabel = "Sinopse " + filme.getNome();
+            }
+
+            Calldorado.ReEngagementField field = new Calldorado.ReEngagementField(
                     fieldName,
-                    "https://play.google.com/store/apps/details?id=br.thiengocalopsita&hl=pt_BR",
-                    "Thiengo Calopsita 2" );
-            Calldorado.setupDynamicReEngagementField(context, field);
+                    path,
+                    fieldLabel );
+
+            Calldorado.setupDynamicReEngagementField( context, field );
         }
     }
 }
+
+
+

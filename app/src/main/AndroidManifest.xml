@@ -20,24 +20,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".DetailsActivity"
+        <activity android:name=".DetalhesActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <!-- activity android:name=".TestActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="android-app"
-                    android:host="br.com.thiengo.cinemalocalapp"
-                    android:path="/test" />
-            </intent-filter>
-        </activity -->
-
         <receiver
-            android:name=".broadcast.DynamicReEngagementReceiver"
-            android:exported="true">
+            android:name=".broadcast.DynamicReEngagementReceiver">
             <intent-filter>
                 <action android:name="com.calldorado.android.intent.DYNAMIC_RE_ENGAGEMENT_SHOWN" />
             </intent-filter>

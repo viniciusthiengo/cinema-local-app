@@ -70,7 +70,7 @@ public class FilmesAdapter extends RecyclerView.Adapter<FilmesAdapter.ViewHolder
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent( activity, DetailsActivity.class );
+            Intent intent = new Intent( activity, DetalhesActivity.class );
             intent.putExtra(Filme.KEY, filmes.get( getAdapterPosition() ));
             activity.startActivity( intent );
         }

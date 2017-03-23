@@ -14,11 +14,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import br.com.thiengo.cinemalocalapp.data.Mock;
+import br.com.thiengo.cinemalocalapp.data.SPFilme;
+import br.com.thiengo.cinemalocalapp.domain.Filme;
 
 public class MainActivity extends AppCompatActivity implements CalldoradoEventsManager.CalldoradoEventCallback {
+
+    private ArrayList<Filme> filmes;
 
     private void initializeCalldorado() {
         Calldorado.startCalldorado(this);
@@ -32,28 +38,50 @@ public class MainActivity extends AppCompatActivity implements CalldoradoEventsM
 
         initRecycler();
 
+        Uri data = getIntent().getData();
+        if( data != null ){
+
+            // REENGAJAMENTO DE BOTÃO DINÂMICO
+            String path = data.getPath();
+            path = path.substring(1, path.length()); /* REMOVENDO BARRA INICIAL */
+            Filme filme = getFilmeByUrl( path );
+
+            if( filme != null ){
+
+                Intent intent = new Intent(this, DetalhesActivity.class);
+                intent.putExtra( Filme.KEY, filme );
+                startActivity( intent );
+            }
+
+            // REENGAJAMENTO DE BOTÃO ESTÁTICO
+            //if( host.equalsIgnoreCase( getPackageName() )
+                    //&& path.equalsIgnoreCase("/lancamento") ){
+
+                /*
+                * NOTE QUE O ÚLTIMO FILME ADICIONADO É O PRIMEIRO
+                * DA LISTA DE FILMES, ENTÃO O ACESSO A ELE É VIA
+                * POSIÇÃO 0.
+                * */
+                //Intent intent = new Intent(this, DetalhesActivity.class);
+                //intent.putExtra( Filme.KEY, Mock.gerarFilmes().get( 0 ) );
+                //startActivity( intent );
+            //}
+        }
+
+        // LISTENER DE CARREGAMENTO DO SDK CALLDORADO
         CalldoradoEventsManager.getInstance().setCalldoradoEventCallback(this);
-
-        Intent intent = new Intent();
-        intent.setAction("com.calldorado.android.intent.SET_CUSTOM_ICON");
-        intent.setPackage(this.getApplicationContext().getPackageName());
-        intent.putExtra("icon","ic_launcher_round");
-
-        String action = getIntent().getAction();
-        Uri uri = getIntent().getData();
-        //Bundle extras = getIntent().getExtras();
-        Log.i("Log", "action: "+action);
-        Log.i("Log", "uri: "+uri);
     }
 
     private void initRecycler(){
+        filmes = Mock.gerarFilmes();
+
         RecyclerView rvFilmes = (RecyclerView) findViewById(R.id.rv_filmes);
         rvFilmes.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         rvFilmes.setLayoutManager( layoutManager );
 
-        FilmesAdapter adapter = new FilmesAdapter( this, Mock.gerarFilmes() );
+        FilmesAdapter adapter = new FilmesAdapter( this, filmes );
         rvFilmes.setAdapter( adapter );
     }
 
@@ -61,15 +89,28 @@ public class MainActivity extends AppCompatActivity implements CalldoradoEventsM
     protected void onResume() {
         super.onResume();
 
-        //Calldorado.search(this, new CDOPhoneNumber("+551111"));
+        String path = null;
+        String fieldLabel = null;
+
+        if( SPFilme.hasFilmeParaVisualizar( this, filmes ) ){
+            Filme filme = SPFilme.getFilmeMaisAtualNaoVisualizado( this, filmes );
+            path = "android-app://br.com.thiengo.cinemalocalapp/" + filme.getUrlImagem();
+            fieldLabel = "Sinopse " + filme.getNome();
+        }
 
         Calldorado.ReEngagementField field = new Calldorado.ReEngagementField(
-            "re-app",
-            "https://play.google.com/store/apps/details?id=br.thiengocalopsita&hl=pt_BR",
-            "Filmes que estão em cartaz" );
+                "re-app-filme-nao-visualizado",
+                path,
+                fieldLabel );
+
         Calldorado.setupDynamicReEngagementField(this, field);
 
 
+        // SEARCH DATA CALLDORADO API
+        //Calldorado.search(this, new CDOPhoneNumber("+551111"));
+
+
+        // TARGETING CALLDORADO API
         /*HashMap<Calldorado.TargetingOption, String> map = new HashMap<>();
         map.put(Calldorado.TargetingOption.BirthDate, "2000-08-03" );
         map.put(Calldorado.TargetingOption.Gender, "male" );
@@ -115,5 +156,14 @@ public class MainActivity extends AppCompatActivity implements CalldoradoEventsM
         Log.i("Log", "onLoadingError(): "+s);
     }
 
+    private Filme getFilmeByUrl( String url ){
 
+        for( Filme f : filmes ){
+
+            if( f.getUrlImagem().equalsIgnoreCase( url ) ){
+                return f;
+            }
+        }
+        return null;
+    }
 }
